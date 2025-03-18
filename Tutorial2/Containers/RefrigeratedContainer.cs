@@ -3,7 +3,7 @@
 public class RefrigeratedContainer(double height, double tareWeight, double depth, double maxPayload, string productType, double temperature)
     : Container('C', height, tareWeight, depth, maxPayload)
 {
-    private Dictionary<string, double> _products = new Dictionary<string, double>
+    private static Dictionary<string, double> _products = new Dictionary<string, double>
     {
         ["Bananas"] = 13.3,
         ["Chocolate"] = 18,
@@ -22,7 +22,13 @@ public class RefrigeratedContainer(double height, double tareWeight, double dept
 
     public override void LoadCargo(double massOfCargo)
     {
-        if (_products.ContainsKey(_productType) && _products[_productType] > _temperature)
+        if (massOfCargo < 0)
+            throw new ArgumentOutOfRangeException(nameof(massOfCargo), "massOfCargo cannot be negative.");
+        
+        if (!_products.ContainsKey(_productType))
+            throw new ArgumentOutOfRangeException(nameof(productType), _productType, "Product type does not exist.");
+        
+        if (_products[_productType] > _temperature)
         {
             Console.WriteLine("The temperature of the container is too low.");
             return;

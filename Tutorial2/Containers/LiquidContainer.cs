@@ -3,24 +3,18 @@ using Tutorial2.Interfaces;
 
 namespace Tutorial2.Containers;
 
-public class LiquidContainer(double height, double tareWeight, double depth, double maxPayload, bool isHazardous)
-    : Container('L', height, tareWeight, depth, maxPayload), IHazardNotifier
+public class LiquidContainer : HazardousContainer
 {
-    private bool _isHazardous = isHazardous;
+    private readonly double _allowedMaxPayload;
     
-    public override void LoadCargo(double cargoWeight)
+    public LiquidContainer(double height, double tareWeight, double depth, double maxPayload, bool isHazardous)
+        : base('L', height, tareWeight, depth, maxPayload)
     {
-        CargoWeight += cargoWeight;
-        if (CargoWeight > (_isHazardous ? MaxPayload * 0.5 : MaxPayload * 0.9))
-        {
-            if (_isHazardous)
-                NotifyHazard("Hazardous cargo limit exceeded");
-            throw new OverfillException();
-        }
+        IsHazardous = isHazardous;
+        _allowedMaxPayload = MaxPayload * (isHazardous ? 0.5 : 0.9);
     }
-
-    public void NotifyHazard(string message)
-    {
-        Console.WriteLine($"Hazard situation occured on {SerialNumber} container. Message:\n{message}");
-    }
+    
+    public override bool ValidateWeight(double weightToAdd) => CargoWeight + weightToAdd <= _allowedMaxPayload;
+    
+    public bool IsHazardous { get; }
 }

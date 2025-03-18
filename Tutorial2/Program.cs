@@ -9,9 +9,9 @@ public class Program
         Container conG = new GasContainer(1, 100, 1, 1000, 5);
         Container conR = new RefrigeratedContainer(1, 100, 1, 1000, "Fish", 5);
         Container conL2 = new LiquidContainer(1, 1, 1, 20000, true);
-        Vehicle ship1 = new Ship(10, 5, 10);
-        Vehicle ship2 = new Ship(10, 5, 10);
-        Vehicle ship3 = new Ship(10, 5, 1);
+        Ship ship1 = new Ship(10, 5, 10);
+        Ship ship2 = new Ship(10, 5, 10);
+        Ship ship3 = new Ship(10, 5, 1);
         
         conL1.LoadCargo(500);
         conG.LoadCargo(1000);
