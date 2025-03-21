@@ -98,7 +98,10 @@ public class Ship(double maxSpeed, int maxNumberOfContainers, double maxWeight)
         shipFrom.UnloadContainer(container, false);
         var isLoaded = shipTo.LoadContainer(container, false);
         if (!isLoaded)
+        {
+            Console.WriteLine("The transfer has been interrupted.");
             shipFrom.LoadContainer(container, false);
+        }
         else 
             Console.WriteLine($"Container {contNumber} successfully transferred.");
 
