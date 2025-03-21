@@ -11,16 +11,16 @@ public class Ship(double maxSpeed, int maxNumberOfContainers, double maxWeight)
     
     public void ReplaceContainer(string oldContainerNumber, Container newContainer)
     {
+        if (oldContainerNumber == newContainer.SerialNumber)
+        {
+            Console.WriteLine($"Cannot replace container {oldContainerNumber} with itself.");
+            return;
+        }
+        
         var oldContainer = LoadedContainers.FirstOrDefault(c => c.SerialNumber == oldContainerNumber);
         if (oldContainer == null)
         {
             Console.WriteLine($"Container {oldContainerNumber} not found");
-            return;
-        }
-
-        if (oldContainer == newContainer)
-        {
-            Console.WriteLine($"Cannot replace container {oldContainerNumber} with itself.");
             return;
         }
         
@@ -37,7 +37,15 @@ public class Ship(double maxSpeed, int maxNumberOfContainers, double maxWeight)
     public void LoadContainers(List<Container> containers)
     {
         foreach (var container in containers)
+        {
             LoadContainer(container);
+            
+            if (LoadedContainers.Count == MaxNumberOfContainers)
+            {
+                Console.WriteLine($"Maximum number of containers reached, containers after {container.SerialNumber} won't be loaded.");
+                return;
+            }
+        }
     }
 
     public bool LoadContainer(Container container, bool printSuccessMsg = true)
@@ -87,17 +95,12 @@ public class Ship(double maxSpeed, int maxNumberOfContainers, double maxWeight)
     public static void TransferContainerBetweenShips(Ship shipFrom, Ship shipTo, Container container)
     {
         string contNumber = container.SerialNumber;
-        if (!shipFrom.LoadedContainers.Contains(container))
-        {
-            Console.WriteLine($"No container {contNumber} found");
-            return;
-        }
-
-        if (shipTo.LoadContainer(container, false))
-        {
-            shipFrom.UnloadContainer(container, false);
+        shipFrom.UnloadContainer(container, false);
+        var isLoaded = shipTo.LoadContainer(container, false);
+        if (!isLoaded)
+            shipFrom.LoadContainer(container, false);
+        else 
             Console.WriteLine($"Container {contNumber} successfully transferred.");
-        }
 
     }
     
